@@ -1,220 +1,235 @@
-# RAG Lab
+# RagLAB — Retrieval-Augmented Generation for the EU AI Act
 
-Projet de Retrieval-Augmented Generation pour le corpus du règlement européen sur l’IA (AI Act), avec focus sur la récupération de passages juridiques pertinents et la génération de réponses fondées sur le texte fourni.
+**An experimental RAG engineering project for evaluating retrieval strategies on a legal document corpus.**
+
+RagLAB explores how different retrieval strategies affect the quality, relevance, and ranking of evidence retrieved from the European Union Artificial Intelligence Act (Regulation (EU) 2024/1689).
+
+The project combines semantic search, lexical retrieval, hybrid ranking, and an evaluation pipeline to investigate a key question:
+
+> How can we retrieve the right legal evidence before generating an answer?
+
+## Overview
+
+Legal question answering presents a retrieval challenge: a passage can be semantically similar to a question without containing the specific legal obligation needed to answer it.
+
+RagLAB investigates this challenge by comparing retrieval strategies, examining failure cases, and evaluating retrieved passages against human-reviewed textual evidence.
+
+### Key features
+
+- **Semantic retrieval** using Sentence Transformers embeddings and FAISS.
+- **Lexical retrieval** using BM25 for exact terms and legal terminology.
+- **Hybrid retrieval** combining semantic and lexical rankings with Reciprocal Rank Fusion (RRF).
+- **Optional reranking** using a cross-encoder after hybrid retrieval.
+- **Retrieval evaluation** using ranking metrics and text-based relevance anchors.
+- **Failure analysis** to investigate irrelevant passages, incomplete evidence coverage, and ranking limitations.
+- **Streamlit interface** for interactive exploration and system comparison.
+- **Optional Gemini generation** for testing answer generation grounded in retrieved passages.
 
 ## Architecture
 
-- `src/retrieval.py` : recherche vectorielle de base sur FAISS + embeddings SentenceTransformers
-- `src/retrieval/bm25_search.py` : recherche lexicale BM25 sur les mots-clés
-- `src/retrieval/hybrid_search.py` : fusion des résultats vectoriels et BM25
-- `src/rag.py` : pipeline complet RAG pour interroger le modèle Gemini
-- `evaluate.py` : script de benchmark pour comparer les méthodes
-- `src/eval_metrics.py` : métriques de récupération et de classement
+```mermaid
+flowchart TD
+    A[EU AI Act Corpus] --> B[Text Processing and Chunks]
+    B --> C[Embedding Model]
+    B --> D[Lexical Index]
+    C --> E[FAISS Vector Search]
+    D --> F[BM25 Search]
+    E --> G[Hybrid Fusion with RRF]
+    F --> G
+    G --> H[Optional Cross-Encoder Reranking]
+    H --> I[Retrieved Evidence]
+    I --> J[Optional Gemini Answer Generation]
+    K[Evaluation Questions and Text Anchors] --> L[Benchmark Runner]
+    E --> L
+    F --> L
+    G --> L
+    H --> L
+    L --> M[Retrieval Metrics and Failure Analysis]
+```
 
-## Logique de la fusion hybride
+## Retrieval strategies
 
-La recherche hybride ne choisit pas une méthode unique. Elle combine les résultats de deux moteurs :
+| Strategy | Purpose |
+|---|---|
+| `no_retrieval` | Establish a baseline without retrieved context. |
+| `naive_rag` | Use a straightforward vector-retrieval pipeline before generation. |
+| `vector` | Evaluate semantic retrieval independently. |
+| `bm25` | Evaluate lexical retrieval independently. |
+| `hybrid` | Combine vector and BM25 rankings through RRF. |
+| `agentic` | Explore routing, complementary retrieval, and verification. |
 
-1. Recherche vectorielle (sémantique)
-2. Recherche lexicale BM25 (mots-clés exacts)
+The benchmark protocol is designed to compare these approaches under a consistent evaluation format. Actual availability and execution depend on the current implementation and configuration.
 
-Pour chaque document, on récupère sa position dans chaque moteur, puis on fusionne les rangs avec une formule de Reciprocal Rank Fusion (RRF) :
+### Why hybrid retrieval?
+
+Semantic search helps identify passages with similar meaning, while BM25 helps match exact legal terms and expressions.
+
+RagLAB combines both rankings using Reciprocal Rank Fusion:
+
+\[
+\operatorname{RRF}(d)=
+\sum_{r \in R}\frac{1}{k+\operatorname{rank}_r(d)}
+\]
+
+where \(d\) is a document, \(R\) is the set of retrieval rankings, and \(k\) is a smoothing constant.
+
+This approach combines complementary ranking signals without requiring raw similarity scores from different retrieval systems to be directly comparable.
+
+## Evaluation methodology
+
+RagLAB focuses on retrieval quality rather than assuming that a fluent answer is necessarily a correct one.
+
+The evaluation pipeline includes:
+
+- **Recall@k** — whether relevant evidence appears in the retrieved results.
+- **Precision@k** — the proportion of retrieved results judged relevant.
+- **MRR@k** — how highly the first relevant result is ranked.
+- **nDCG@k** — ranking quality when relevance varies across results.
+- **Article coverage** — coverage of relevant AI Act articles.
+- **Generation evaluation** — grounding and hallucination-related measures when answer generation is enabled and the necessary evaluation data is available.
+
+Textual anchors are used to assess evidence relevance independently of chunk IDs, helping separate evaluation from a particular chunking strategy.
+
+### What failure analysis investigates
+
+The project examines issues such as:
+
+- Semantically similar passages that describe obligations for the wrong legal actor.
+- Incomplete retrieval when a question requires evidence from multiple passages.
+- The effect of a fixed top-k cutoff on legal evidence coverage.
+- Ranking ties and reproducibility.
+- The difference between retrieval quality and answer-generation quality.
+
+These analyses help identify where larger retrieval windows, article-aware filtering, reranking, or improved query strategies may be useful.
+
+## Getting started
+
+### 1. Clone the repository
+
+```powershell
+git clone https://github.com/Herchan321/RagLAB.git
+cd RagLAB
+```
+
+### 2. Create a virtual environment
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+If PowerShell blocks script activation, use the environment's Python executable directly instead.
+
+### 3. Install dependencies
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+### 4. Configure Gemini (optional)
+
+Create a `.env` file in the project root if your local implementation loads environment variables from it:
 
 ```text
-score_fusion(d) = 1 / (k + rank_vector(d)) + 1 / (k + rank_bm25(d))
+GEMINI_API_KEY=your_api_key_here
 ```
 
-- si le document est bien classé dans les deux moteurs, son score augmente
-- s’il est bon dans un seul moteur, il reste présent mais avec un score plus faible
-- si le document est mauvais dans les deux, il descend
+Keep API keys out of Git. The generation feature is optional; retrieval experiments that do not invoke Gemini do not require this key.
 
-Cela permet d’exploiter les deux signaux complémentaires :
-
-- vector = similarité sémantique
-- BM25 = correspondance lexicale exacte
-
-## Pourquoi ce choix ?
-
-Dans un corpus juridique, les documents importants peuvent être retrouvés par :
-
-- leur sens général
-- leurs termes exacts et leur vocabulaire légal
-- leur article et leurs notions juridiques spécifiques
-
-La fusion hybride évite de dépendre d’un seul type de recherche.
-
-## Benchmark
-
-The benchmark is executed via `evaluate.py` on the frozen v2 dataset (questions.json). The dataset is based on the original text of Regulation (EU) 2024/1689, published July 12, 2024.
-
-For interactive comparison, see the web app interface in `app.py`. Example results can be seen by running the dev benchmark:
+### 5. Launch the Streamlit application
 
 ```powershell
-.\.venv\Scripts\python.exe benchmark_runner.py --split dev --output data/evaluation/results.dev.json --eval_k 6
+python -m streamlit run app.py
 ```
 
-**`--eval_k` parameter:** When set and the system is `agentic`, the benchmark calculates retrieval metrics on **all retrieved passages** instead of just the top-`k` (default 5). This is useful for studying the agentic system’s broader retrieval strategy. If not set or if agentic returns ≤ `eval_k` passages, the standard `k=5` behavior applies.
+The interface provides tools for comparing retrieval systems, exploring the assistant, inspecting benchmark results, and reviewing methodology and limitations.
 
-### Analysis of failures
+## Running the benchmark
 
-A comparison of retrieval systems on key questions reveals typical failure patterns:
-
-**Naive RAG:** Fetches relevant passages from the correct article (e.g., Article 26) but also includes off-topic neighbor passages from other articles (e.g., Article 14 — human oversight is a provider obligation, not a deployer obligation). This illustrates the weakness of purely semantic search without Article‑aware filtering.
-
-**Hybrid:** Stays within the correct article (e.g., Article 26) but limited by the fixed k=5 cutoff. The AI Act Article 26 contains at least 9 relevant chunks (passages), so none of the systems retrieve the full list of obligations with the default k. Points for improvement (tested on dev, not yet frozen for test): expand context, boost k for hybrid, or use neighbor expansion.
-
-**Agentic:** Returns the same 5 passages as Naive RAG, then adds three passages from other articles (e.g., Articles 16 and 20) that begin with "Providers of high‑risk AI systems…". These describe provider obligations (logging, cooperation with authorities, etc.), not deployer obligations, making them noise for a question about deployer duties. The system includes citations of provider responsibilities, which are irrelevant. See the technical trace in the app to see which queries produced them.
-
-**Deterministic tie‑breaking:** When RRF scores from hybrid are equal (e.g., two passages with score 0.0318), order depends on implementation randomness. To ensure reproducible evaluation, break ties deterministically by `chunk_id`.
-
-For interactive questions (e.g., the dev set), there is no ground truth, so relevance labels cannot be trusted. Scores from different retrieval sources (cosine similarity vs. RRF) use different scales, making a single threshold misleading.
-
-These insights come from a 5‑passage window, which caps Recall for a multi‑chunk Article like Article 26. For real‑world deployment, consider expanding the retrieval window (e.g., neighbor chunks, full article, or larger k).
-Il compare actuellement :
-
-- vector
-- BM25
-- hybrid
-
-Le protocole prévoit les six systèmes suivants :
-
-- `no_retrieval` : question envoyée au modèle sans passage récupéré
-- `naive_rag` : top-k vectoriel simple puis génération
-- `vector` : récupération vectorielle évaluée séparément
-- `bm25` : récupération lexicale évaluée séparément
-- `hybrid` : fusion vectorielle + BM25
-- `agentic` : routage, récupération complémentaire, vérification puis génération
-
-Les deux premières baselines et le système agentique seront exécutés avec le
-même jeu gelé et le même format de résultat. Tant que la génération Gemini
-n'est pas activée, `evaluate.py` mesure uniquement la qualité de récupération
-des trois moteurs disponibles.
-
-Le runner isolé de développement est
-[benchmark_runner.py](C:/Users/dell/Desktop/raglab/benchmark_runner.py). Il
-exécute chaque système séparément et écrit les résultats dans
-`data/evaluation/results.dev.json` :
+Run the development benchmark with:
 
 ```powershell
-.\.venv\Scripts\python.exe benchmark_runner.py `
+python benchmark_runner.py `
   --split dev `
   --output data/evaluation/results.dev.json
 ```
 
-La génération Gemini est désactivée par défaut. Pour l'activer explicitement
-après configuration de `GEMINI_API_KEY` :
+To use the version 3 question dataset explicitly:
 
 ```powershell
-.\.venv\Scripts\python.exe benchmark_runner.py `
-  --split dev `
-  --generate
-```
-
-Les résultats de développement ne constituent pas encore les résultats finaux
-du benchmark : le split `test` doit d'abord être complété et relu.
-
-Les métriques de ranking du runner sont calculées à partir d'ancres textuelles
-dans [anchors.json](C:/Users/dell/Desktop/raglab/data/evaluation/anchors.json),
-et non à partir des IDs de chunks. Un passage récupéré est pertinent s'il
-contient une ancre d'un fait requis. Les IDs lisibles
-(`AIA-Art51-p2`, etc.) restent des repères humains et ne servent pas au calcul.
-Cette séparation permet de comparer plusieurs stratégies de chunking. La
-couverture des articles est conservée comme métrique séparée. Quand Gemini
-n'est pas exécuté, les métriques de génération restent `null`/non collectées ;
-elles ne sont jamais remplacées par des zéros.
-
-## Dataset v3
-
-Le dataset v3 de développement est conservé dans
-[questions.v3.json](C:/Users/dell/Desktop/raglab/data/evaluation/questions.v3.json).
-Il contient 55 questions, dont 29 dans le split `test`, et utilise
-`anchors_any` comme vérité textuelle indépendante du chunking. Les
-`gold_paragraph_ids` sont uniquement des repères humains.
-
-Les ancres doivent être vérifiées contre le corpus avant de passer une question
-en `reviewed` :
-
-```powershell
-.\.venv\Scripts\python.exe check_anchors.py `
-  data/evaluation/questions.v3.json `
-  data/processed/aia_passages.jsonl
-```
-
-Le runner peut utiliser v3 sans le geler :
-
-```powershell
-.\.venv\Scripts\python.exe benchmark_runner.py `
+python benchmark_runner.py `
   --questions data/evaluation/questions.v3.json `
   --split dev `
   --output data/evaluation/results.v3.dev.json
 ```
 
-Le v3 reste un dataset de développement : ses questions sont encore `draft`
-et certaines ancres nécessitent une vérification humaine.
-
-## Application
-
-L'interface Streamlit est dans [app.py](C:/Users/dell/Desktop/raglab/app.py).
-Elle propose les onglets **Comparer**, **Assistant**, **Résultats benchmark** et
-**Méthode et limites**. La comparaison est limitée à trois systèmes par
-question. La génération Gemini est désactivée par défaut ; elle nécessite
-`GEMINI_API_KEY`.
+To enable Gemini generation, after configuring the API key:
 
 ```powershell
-.\.venv\Scripts\python.exe -m streamlit run app.py
+python benchmark_runner.py `
+  --split dev `
+  --generate
 ```
 
-Les métriques comprennent :
+Verify the available arguments and dataset paths against the current repository before running these commands. Development results should not be presented as final test-set results.
 
-- Recall@k
-- Precision@k
-- MRR@k
-- nDCG@k
-- article coverage
-- groundedness / hallucination rate
+## Project structure
 
-Le but est d’évaluer non seulement si le bon document est retrouvé, mais aussi s’il est bien classé dans le top-k.
-
-## État actuel
-
-Le projet a validé :
-
-- recherche vectorielle robuste pour les questions de droit de l’IA
-- intégration BM25
-- fusion hybride fonctionnelle
-- jeu de test gelé v2 avec sept questions, dont deux dans le split `test`
-- faits atomiques annotés et identifiants de passages d’or
-- protocole de résultat commun pour les comparaisons en ligne et hors ligne
-- benchmark de comparaison avec métriques de classement
-
-## Prochaine étape recommandée
-
-- améliorer la fusion hybride avec un reranker ou un routeur
-- comparer plus de questions de test
-- intégrer le meilleur moteur dans le pipeline RAG final
-
-## Reranking optionnel
-
-La recherche hybride peut maintenant appliquer un reranker cross-encoder après
-la fusion RRF. Le reranker doit exposer une méthode `predict` compatible avec
-`sentence_transformers.CrossEncoder` :
-
-```python
-from sentence_transformers import CrossEncoder
-from src.retrieval.hybrid_search import search_hybrid
-
-reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
-results = search_hybrid(
-    query="What AI practices are prohibited?",
-    chunks=chunks,
-    vector_results=vector_results,
-    bm25_results=bm25_results,
-    top_k=5,
-    reranker=reranker,
-)
+```text
+RagLAB/
+├── app.py
+├── benchmark_compare.py
+├── benchmark_runner.py
+├── check_anchors.py
+├── evaluate.py
+├── validate_questions.py
+├── requirements.txt
+├── src/
+│   ├── retrieval.py
+│   ├── rag.py
+│   ├── eval_metrics.py
+│   └── retrieval/
+│       ├── bm25_search.py
+│       └── hybrid_search.py
+├── data/
+│   └── evaluation/
+├── tests/
+└── README.md
 ```
 
-Le reranking est désactivé par défaut afin de préserver le comportement et les
-performances existants. Les résultats rerankés contiennent aussi le champ
-`reranker_score`.
+*The structure above highlights the main components; the exact files and data subdirectories may evolve.*
+
+## Current status
+
+RagLAB is an experimental engineering project. Its current focus is retrieval implementation, evaluation methodology, and systematic analysis of failure cases.
+
+Implemented components include vector retrieval, BM25, hybrid RRF fusion, benchmark tooling, and an optional reranking path.
+
+The evaluation datasets are still subject to review, and development results should be distinguished from final held-out test results. No performance improvement is claimed here without verified benchmark results.
+
+## Roadmap
+
+- Finalize and review the held-out test questions and relevance anchors.
+- Run reproducible comparisons across retrieval strategies.
+-  Investigate article-aware filtering and context expansion.
+- Measure the effect of optional cross-encoder reranking.
+- Evaluate generated answers against evidence and legal grounding criteria.
+-Document benchmark results, limitations, and reproducibility details.
+
+## Limitations
+
+RagLAB is an experimental system, not a legal advice service. Retrieved passages and generated answers require verification against the authoritative legal text.
+
+Retrieval metrics depend on the quality and completeness of relevance annotations. A system can retrieve relevant evidence without retrieving every passage required to answer a complex question.
+
+## Tech stack
+
+`Python` · `FAISS` · `Sentence Transformers` · `BM25` · `RRF` · `Cross-Encoder Reranking` · `Streamlit` · `Gemini API` · `pytest`
+
+## Author
+
+**Asma Herchan**
+
+- GitHub: [@Herchan321](https://github.com/Herchan321)
 
