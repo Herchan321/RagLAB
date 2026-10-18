@@ -1,2 +1,8 @@
 ﻿# Third-party EUR-Lex assets
 data/raw/regAI_files/** linguist-vendored
+
+# Downloaded legal source
+data/raw/regAI.html linguist-vendored
+
+# Generated corpus and indexes
+data/processed/** linguist-generated
