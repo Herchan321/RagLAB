@@ -1,0 +1,2273 @@
+{
+  "schema_version": "3.0",
+  "dataset_id": "eu-ai-act-qa-v3",
+  "description": "Factual questions about the text of the EU AI Act (original 2024 version), used to compare RAG architectures. Not legal advice: systems are evaluated, not the law.",
+  "corpus": {
+    "documents": [
+      {
+        "doc_id": "AIA",
+        "title": "Regulation (EU) 2024/1689 (AI Act), original Official Journal text",
+        "language": "en",
+        "oj_publication_date": "2024-07-12",
+        "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+        "local_path": "data/raw/regAI.html",
+        "retrieved_at": "TODO: YYYY-MM-DD of your download",
+        "sha256": "TODO: hash of data/raw/regAI.html"
+      }
+    ],
+    "version_note": "Original 2024 text, before the Digital Omnibus on AI (Regulation (EU) 2026/1744, in force 27 July 2026). Questions flagged version_sensitive may differ under the current law and stay in the dev split."
+  },
+  "annotation_rules": [
+    "An answerable question must be answerable from the frozen corpus alone.",
+    "Each required fact is one atomic claim with anchors_any: short phrases that must appear in a retrieved passage for the fact to count as covered. Anchors are independent of chunking.",
+    "anchors_verified is true only for anchors copied from passages the annotator pasted; every anchor must still be checked against the real passages file with check_anchors.py.",
+    "gold_paragraph_ids are human-readable references only and never enter metric computation.",
+    "An unanswerable question must look like a real question and must not mention passages, context or fiction. Confirm absence with absence_terms and a manual read.",
+    "Questions were drafted with LLM assistance and must be reviewed by a human before status becomes reviewed. State this in the README.",
+    "Do not edit a test question after the freeze."
+  ],
+  "freeze": {
+    "frozen_at": null,
+    "n_test": null,
+    "test_sha256": null
+  },
+  "questions": [
+    {
+      "id": "Q001",
+      "split": "dev",
+      "category": "list_enumeration",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "According to Article 5(1) of the AI Act, which categories of AI practices are prohibited?",
+      "answer_type": "list",
+      "reference_answer": "Subliminal or manipulative techniques; exploitation of vulnerabilities; social scoring; criminal-risk assessment based solely on profiling; untargeted scraping for facial recognition databases; emotion inference in workplace and education; biometric categorisation of sensitive attributes; real-time remote biometric identification for law enforcement, subject to exceptions.",
+      "required_facts": [
+        {
+          "text": "Prohibits AI systems that deploy subliminal, manipulative or deceptive techniques that materially distort behaviour.",
+          "anchors_any": [
+            "deploys subliminal techniques"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q001-F1"
+        },
+        {
+          "text": "Prohibits AI systems that exploit vulnerabilities due to age, disability or a specific social or economic situation.",
+          "anchors_any": [
+            "exploits any of the vulnerabilities",
+            "vulnerabilities of a natural person"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q001-F2"
+        },
+        {
+          "text": "Prohibits social scoring leading to detrimental or unfavourable treatment.",
+          "anchors_any": [
+            "social score",
+            "detrimental or unfavourable treatment of certain natural persons"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q001-F3"
+        },
+        {
+          "text": "Prohibits risk assessments predicting criminal offences solely from profiling or personality traits.",
+          "anchors_any": [
+            "risk of a natural person committing a criminal offence"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q001-F4"
+        },
+        {
+          "text": "Prohibits building facial recognition databases through untargeted scraping of facial images.",
+          "anchors_any": [
+            "untargeted scraping of facial images"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q001-F5"
+        },
+        {
+          "text": "Prohibits inferring emotions in the workplace and education institutions, except for medical or safety reasons.",
+          "anchors_any": [
+            "infer emotions of a natural person"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q001-F6"
+        },
+        {
+          "text": "Prohibits biometric categorisation systems that infer sensitive attributes.",
+          "anchors_any": [
+            "biometric categorisation systems that categorise individually"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q001-F7"
+        },
+        {
+          "text": "Prohibits real-time remote biometric identification in publicly accessible spaces for law enforcement, unless strictly necessary for listed objectives.",
+          "anchors_any": [
+            "(h) the use of"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q001-F8"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "high",
+      "status": "draft",
+      "notes": "Dev only: Article 5 was amended in 2026. A list spanning about seven chunks tests expansion to the full paragraph."
+    },
+    {
+      "id": "Q002",
+      "split": "dev",
+      "category": "trap_similar",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "What is the difference between an AI practice prohibited under Article 5 and an AI system classified as high-risk under Article 6?",
+      "answer_type": "explanation",
+      "reference_answer": "Article 5 lists practices that are prohibited outright; Article 6 sets the rules for classifying AI systems as high-risk, which are allowed subject to requirements.",
+      "required_facts": [
+        {
+          "text": "Article 5 lists AI practices that shall be prohibited.",
+          "anchors_any": [
+            "The following AI practices shall be prohibited"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q002-F1"
+        },
+        {
+          "text": "Article 6 sets the conditions under which an AI system is considered high-risk.",
+          "anchors_any": [
+            "shall be considered to be high-risk"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p1",
+            "AIA-Art6-p2"
+          ],
+          "id": "Q002-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": "Dev only. No system retrieved the Article 5 chunk that says 'shall be prohibited' in the last run."
+    },
+    {
+      "id": "Q003",
+      "split": "dev",
+      "category": "numeric_threshold",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "What is the maximum administrative fine for non-compliance with the prohibition of AI practices referred to in Article 5?",
+      "answer_type": "numeric",
+      "reference_answer": "Up to EUR 35 000 000 or, if the offender is an undertaking, up to 7 % of total worldwide annual turnover of the preceding financial year, whichever is higher.",
+      "required_facts": [
+        {
+          "text": "The fine can reach EUR 35 000 000.",
+          "anchors_any": [
+            "EUR 35 000 000"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p3"
+          ],
+          "id": "Q003-F1"
+        },
+        {
+          "text": "For an undertaking, up to 7 % of total worldwide annual turnover, whichever is higher.",
+          "anchors_any": [
+            "7 % of its total worldwide annual turnover"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p3"
+          ],
+          "id": "Q003-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "high",
+      "status": "draft",
+      "notes": "BM25 and hybrid rank Article 100 (EUR 1 500 000) above Article 99: a distractor."
+    },
+    {
+      "id": "Q004",
+      "split": "dev",
+      "category": "single_passage",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "Which article of the AI Act sets out the obligations of providers of high-risk AI systems?",
+      "answer_type": "identifier",
+      "reference_answer": "Article 16.",
+      "required_facts": [
+        {
+          "text": "Article 16 sets out the obligations of providers of high-risk AI systems.",
+          "anchors_any": [
+            "Obligations of providers of high-risk AI systems",
+            "Providers of high-risk AI systems shall:"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art16-p1"
+          ],
+          "id": "Q004-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q005",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Under Article 51, when is a general-purpose AI model classified as having systemic risk, and what compute threshold creates a presumption of high-impact capabilities?",
+      "answer_type": "explanation",
+      "reference_answer": "High-impact capabilities evaluated with appropriate technical tools and methodologies; presumed when cumulative training compute exceeds 10^25 floating-point operations.",
+      "required_facts": [
+        {
+          "text": "Classified as having systemic risk if it has high-impact capabilities evaluated with appropriate technical tools and methodologies.",
+          "anchors_any": [
+            "capabilities evaluated on the basis of appropriate technical tools and methodologies"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art51-p1"
+          ],
+          "id": "Q005-F1"
+        },
+        {
+          "text": "High-impact capabilities are presumed when cumulative training compute, measured in floating-point operations, exceeds 10^25.",
+          "anchors_any": [
+            "cumulative amount of computation used for its training measured in floating point operations"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art51-p2"
+          ],
+          "id": "Q005-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": "The exponent may be rendered oddly in HTML ('1025'); anchors avoid it."
+    },
+    {
+      "id": "Q006",
+      "split": "dev",
+      "category": "unanswerable",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "Which Moroccan authority is responsible for enforcing the AI Act in Morocco?",
+      "answer_type": "abstention",
+      "reference_answer": "The text does not say; it is an EU regulation and does not designate Moroccan authorities.",
+      "required_facts": [],
+      "expected_abstention": true,
+      "abstention_type": "out_of_scope",
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "",
+      "absence_terms": [
+        "Morocco",
+        "Moroccan",
+        "Maroc"
+      ]
+    },
+    {
+      "id": "Q007",
+      "split": "test",
+      "category": "unanswerable",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "What prison sentence applies to a provider that violates the prohibitions in Article 5?",
+      "answer_type": "abstention",
+      "reference_answer": "The text provides administrative fines, not prison sentences. (Article 5(1)(h)(iii) mentions custodial sentences only to define offences for which biometric identification may be used.)",
+      "required_facts": [],
+      "expected_abstention": true,
+      "abstention_type": "near_miss",
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Near miss: related to Article 5 and penalties, but asks for something the text does not set.",
+      "absence_terms": [
+        "imprisonment",
+        "prison"
+      ]
+    },
+    {
+      "id": "Q008",
+      "split": "dev",
+      "category": "definition",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "How does the AI Act define 'AI Office'?",
+      "answer_type": "definition",
+      "reference_answer": "The Commission's function of contributing to the implementation, monitoring and supervision of AI systems, general-purpose AI models and AI governance; references to the AI Office are construed as references to the Commission.",
+      "required_facts": [
+        {
+          "text": "The AI Office is the Commission's function of contributing to implementation, monitoring and supervision of AI systems and general-purpose AI models.",
+          "anchors_any": [
+            "means the Commission's function of contributing to the implementation, monitoring and supervision of AI systems"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art3-p47"
+          ],
+          "id": "Q008-F1"
+        },
+        {
+          "text": "References to the AI Office are construed as references to the Commission.",
+          "anchors_any": [
+            "references in this Regulation to the AI Office shall be construed as references to the Commission"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art3-p47"
+          ],
+          "id": "Q008-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q009",
+      "split": "test",
+      "category": "definition",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "What is a 'national competent authority' under the AI Act?",
+      "answer_type": "definition",
+      "reference_answer": "A notifying authority or a market surveillance authority.",
+      "required_facts": [
+        {
+          "text": "A national competent authority means a notifying authority or a market surveillance authority.",
+          "anchors_any": [
+            "means a notifying authority or a market surveillance authority"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art3-p48"
+          ],
+          "id": "Q009-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q010",
+      "split": "dev",
+      "category": "definition",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "How does the AI Act define a 'deployer'?",
+      "answer_type": "definition",
+      "reference_answer": "A person or body using an AI system under its authority, except where the AI system is used in the course of a personal non-professional activity.",
+      "required_facts": [
+        {
+          "text": "A deployer uses an AI system under its authority.",
+          "anchors_any": [
+            "using an AI system under its authority"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art3-p4"
+          ],
+          "id": "Q010-F1"
+        },
+        {
+          "text": "Personal non-professional use is excluded.",
+          "anchors_any": [
+            "personal non-professional activity"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art3-p4"
+          ],
+          "id": "Q010-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q011",
+      "split": "test",
+      "category": "definition",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "How does the AI Act define an 'AI system'?",
+      "answer_type": "definition",
+      "reference_answer": "A machine-based system designed to operate with varying levels of autonomy that infers from its input how to generate outputs such as predictions, content, recommendations or decisions.",
+      "required_facts": [
+        {
+          "text": "It is designed to operate with varying levels of autonomy.",
+          "anchors_any": [
+            "varying levels of autonomy"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art3-p1"
+          ],
+          "id": "Q011-F1"
+        },
+        {
+          "text": "It infers from the input it receives how to generate outputs.",
+          "anchors_any": [
+            "infers, from the input it receives, how to generate outputs"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art3-p1"
+          ],
+          "id": "Q011-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "high",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q012",
+      "split": "test",
+      "category": "numeric_threshold",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "What is the maximum fine for non-compliance with the obligations of providers under Article 16?",
+      "answer_type": "numeric",
+      "reference_answer": "Up to EUR 15 000 000 or, for an undertaking, up to 3 % of total worldwide annual turnover, whichever is higher.",
+      "required_facts": [
+        {
+          "text": "Provider obligations under Article 16 fall under the second fine tier.",
+          "anchors_any": [
+            "obligations of providers pursuant to Article 16"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p4"
+          ],
+          "id": "Q012-F1"
+        },
+        {
+          "text": "The fine can reach EUR 15 000 000.",
+          "anchors_any": [
+            "EUR 15 000 000"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p4"
+          ],
+          "id": "Q012-F2"
+        },
+        {
+          "text": "For an undertaking, up to 3 % of total worldwide annual turnover.",
+          "anchors_any": [
+            "3 % of its total worldwide annual turnover"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p4"
+          ],
+          "id": "Q012-F3"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q013",
+      "split": "dev",
+      "category": "numeric_threshold",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "What is the maximum fine for supplying incorrect, incomplete or misleading information to notified bodies or national competent authorities in reply to a request?",
+      "answer_type": "numeric",
+      "reference_answer": "Up to EUR 7 500 000 or, for an undertaking, up to 1 % of total worldwide annual turnover, whichever is higher.",
+      "required_facts": [
+        {
+          "text": "The conduct is supplying incorrect, incomplete or misleading information.",
+          "anchors_any": [
+            "supply of incorrect, incomplete or misleading information"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p5"
+          ],
+          "id": "Q013-F1"
+        },
+        {
+          "text": "The fine can reach EUR 7 500 000.",
+          "anchors_any": [
+            "EUR 7 500 000"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p5"
+          ],
+          "id": "Q013-F2"
+        },
+        {
+          "text": "For an undertaking, up to 1 % of total worldwide annual turnover.",
+          "anchors_any": [
+            "up to 1 % of its total worldwide annual turnover"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p5"
+          ],
+          "id": "Q013-F3"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q014",
+      "split": "test",
+      "category": "numeric_threshold",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Within what period must Member States notify the Commission of the detailed national rules on authorisations of real-time remote biometric identification under Article 5?",
+      "answer_type": "numeric",
+      "reference_answer": "At the latest 30 days following the adoption of those rules.",
+      "required_facts": [
+        {
+          "text": "Member States notify the rules to the Commission within 30 days of adopting them.",
+          "anchors_any": [
+            "at the latest 30 days following the adoption thereof"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p5"
+          ],
+          "id": "Q014-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q015",
+      "split": "test",
+      "category": "numeric_threshold",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Under Article 81, how long does the Commission have to decide whether a national measure is justified, and what shorter period applies in cases of non-compliance with the Article 5 prohibitions?",
+      "answer_type": "numeric",
+      "reference_answer": "Within six months, or within 60 days for non-compliance with the Article 5 prohibitions.",
+      "required_facts": [
+        {
+          "text": "The general period is six months.",
+          "anchors_any": [
+            "within six months"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art81-p1"
+          ],
+          "id": "Q015-F1"
+        },
+        {
+          "text": "For Article 5 prohibitions the period is 60 days.",
+          "anchors_any": [
+            "within 60 days in the case of non-compliance with the prohibition of the AI practices referred to in Article 5"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art81-p1"
+          ],
+          "id": "Q015-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q016",
+      "split": "dev",
+      "category": "numeric_threshold",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "For how long do certificates remain valid under Article 36 when a notified body designation has been withdrawn, in the circumstances listed there?",
+      "answer_type": "numeric",
+      "reference_answer": "For a period of nine months, under the listed circumstances.",
+      "required_facts": [
+        {
+          "text": "Certificates remain valid for nine months.",
+          "anchors_any": [
+            "the certificates shall remain valid for a period of nine months"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art36-p9"
+          ],
+          "id": "Q016-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q017",
+      "split": "test",
+      "category": "numeric_threshold",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Within what maximum period must an operator take corrective action required by a market surveillance authority under Article 79?",
+      "answer_type": "numeric",
+      "reference_answer": "Within the period the authority may prescribe, and in any event within the shorter of 15 working days or as provided in the relevant Union harmonisation legislation.",
+      "required_facts": [
+        {
+          "text": "The period is at most the shorter of 15 working days or as provided in the relevant Union harmonisation legislation.",
+          "anchors_any": [
+            "within the shorter of 15 working days"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art79-p2"
+          ],
+          "id": "Q017-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Check in your passages that the sentence belongs to paragraph 2 on corrective actions."
+    },
+    {
+      "id": "Q018",
+      "split": "dev",
+      "category": "list_enumeration",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Under Article 6(3), in which cases is an Annex III AI system not considered high-risk, and what is the exception for profiling?",
+      "answer_type": "list",
+      "reference_answer": "When it performs a narrow procedural task, improves a previously completed human activity, detects decision-making patterns without replacing human review, or performs a preparatory task; but always high-risk if it performs profiling of natural persons.",
+      "required_facts": [
+        {
+          "text": "It performs a narrow procedural task.",
+          "anchors_any": [
+            "intended to perform a narrow procedural task"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p3"
+          ],
+          "id": "Q018-F1"
+        },
+        {
+          "text": "It improves the result of a previously completed human activity.",
+          "anchors_any": [
+            "improve the result of a previously completed human activity"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p3"
+          ],
+          "id": "Q018-F2"
+        },
+        {
+          "text": "It detects decision-making patterns or deviations without replacing or influencing human assessment.",
+          "anchors_any": [
+            "detect decision-making patterns or deviations from prior decision-making patterns"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p3"
+          ],
+          "id": "Q018-F3"
+        },
+        {
+          "text": "It performs a preparatory task to an assessment relevant to Annex III use cases.",
+          "anchors_any": [
+            "preparatory task to an assessment relevant for the purposes of the use cases listed in Annex III"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p3"
+          ],
+          "id": "Q018-F4"
+        },
+        {
+          "text": "It is always high-risk if it performs profiling of natural persons.",
+          "anchors_any": [
+            "shall always be considered to be high-risk where the AI system performs profiling of natural persons"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p3"
+          ],
+          "id": "Q018-F5"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": "Spans two chunks: tests retrieval of adjacent passages."
+    },
+    {
+      "id": "Q019",
+      "split": "test",
+      "category": "list_enumeration",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Under Article 25(1), in which circumstances is a distributor, importer, deployer or other third party considered a provider of a high-risk AI system?",
+      "answer_type": "list",
+      "reference_answer": "When they put their name or trademark on a high-risk AI system already on the market, make a substantial modification that keeps it high-risk, or modify the intended purpose of a non-high-risk AI system so that it becomes high-risk.",
+      "required_facts": [
+        {
+          "text": "They put their name or trademark on a high-risk AI system already placed on the market or put into service.",
+          "anchors_any": [
+            "put their name or trademark on a high-risk AI system"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art25-p1"
+          ],
+          "id": "Q019-F1"
+        },
+        {
+          "text": "They make a substantial modification to a high-risk AI system that remains high-risk.",
+          "anchors_any": [
+            "make a substantial modification to a high-risk AI system"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art25-p1"
+          ],
+          "id": "Q019-F2"
+        },
+        {
+          "text": "They modify the intended purpose of a non-high-risk AI system so that it becomes high-risk.",
+          "anchors_any": [
+            "modify the intended purpose of an AI system"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art25-p1"
+          ],
+          "id": "Q019-F3"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q020",
+      "split": "test",
+      "category": "list_enumeration",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Which circumstances must be taken into account when deciding whether to impose an administrative fine and its amount under Article 99(7)?",
+      "answer_type": "list",
+      "reference_answer": "Nature, gravity and duration; fines already applied by market surveillance or other authorities; size, turnover and market share; other aggravating or mitigating factors; cooperation; degree of responsibility; how the infringement became known; intentional or negligent character; actions to mitigate harm.",
+      "required_facts": [
+        {
+          "text": "The nature, gravity and duration of the infringement and its consequences.",
+          "anchors_any": [
+            "the nature, gravity and duration of the infringement"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F1"
+        },
+        {
+          "text": "Whether fines were already applied by other market surveillance authorities for the same infringement.",
+          "anchors_any": [
+            "whether administrative fines have already been applied by other market surveillance authorities"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F2"
+        },
+        {
+          "text": "Whether fines were already applied by other authorities for infringements of other Union or national law.",
+          "anchors_any": [
+            "whether administrative fines have already been applied by other authorities"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F3"
+        },
+        {
+          "text": "The size, annual turnover and market share of the operator.",
+          "anchors_any": [
+            "the size, the annual turnover and market share of the operator"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F4"
+        },
+        {
+          "text": "Any other aggravating or mitigating factor.",
+          "anchors_any": [
+            "any other aggravating or mitigating factor"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F5"
+        },
+        {
+          "text": "The degree of cooperation with national competent authorities.",
+          "anchors_any": [
+            "the degree of cooperation with the national competent authorities"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F6"
+        },
+        {
+          "text": "The degree of responsibility of the operator.",
+          "anchors_any": [
+            "the degree of responsibility of the operator"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F7"
+        },
+        {
+          "text": "The manner in which the infringement became known to the authorities.",
+          "anchors_any": [
+            "the manner in which the infringement became known to the national competent authorities"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F8"
+        },
+        {
+          "text": "The intentional or negligent character of the infringement.",
+          "anchors_any": [
+            "the intentional or negligent character of the infringement"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F9"
+        },
+        {
+          "text": "Any action taken by the operator to mitigate the harm.",
+          "anchors_any": [
+            "any action taken by the operator to mitigate the harm suffered by the affected persons"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p7"
+          ],
+          "id": "Q020-F10"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Ten facts over three chunks: a hard enumeration."
+    },
+    {
+      "id": "Q021",
+      "split": "dev",
+      "category": "single_passage",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "What information must providers of high-risk AI systems indicate on the system or, where that is not possible, on its packaging or accompanying documentation?",
+      "answer_type": "list",
+      "reference_answer": "Their name, registered trade name or registered trade mark, and the address at which they can be contacted.",
+      "required_facts": [
+        {
+          "text": "Name, registered trade name or registered trade mark, and contact address.",
+          "anchors_any": [
+            "their name, registered trade name or registered trade mark, the address at which they can be contacted"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art16-p1"
+          ],
+          "id": "Q021-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q022",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Under Article 16, which accessibility requirements must a high-risk AI system comply with?",
+      "answer_type": "identifier",
+      "reference_answer": "Accessibility requirements in accordance with Directives (EU) 2016/2102 and (EU) 2019/882.",
+      "required_facts": [
+        {
+          "text": "Accessibility requirements under Directives (EU) 2016/2102 and (EU) 2019/882.",
+          "anchors_any": [
+            "accessibility requirements in accordance with Directives (EU) 2016/2102 and (EU) 2019/882"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art16-p1"
+          ],
+          "id": "Q022-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q023",
+      "split": "dev",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Under Article 10(5), may providers of high-risk AI systems process special categories of personal data, and for what purpose?",
+      "answer_type": "explanation",
+      "reference_answer": "Exceptionally, to the extent strictly necessary for bias detection and correction, subject to appropriate safeguards.",
+      "required_facts": [
+        {
+          "text": "They may exceptionally process special categories of personal data.",
+          "anchors_any": [
+            "may exceptionally process special categories of personal data"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art10-p5"
+          ],
+          "id": "Q023-F1"
+        },
+        {
+          "text": "Only for ensuring bias detection and correction.",
+          "anchors_any": [
+            "ensuring bias detection and correction"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art10-p5"
+          ],
+          "id": "Q023-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": "Dev only: the 2026 omnibus changed rules on special categories for bias detection."
+    },
+    {
+      "id": "Q024",
+      "split": "dev",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Who has exclusive powers to supervise and enforce the obligations of providers of general-purpose AI models?",
+      "answer_type": "explanation",
+      "reference_answer": "The Commission, which entrusts the implementation of these tasks to the AI Office.",
+      "required_facts": [
+        {
+          "text": "The Commission has exclusive powers to supervise and enforce Chapter V.",
+          "anchors_any": [
+            "exclusive powers to supervise and enforce Chapter V"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art88-p1"
+          ],
+          "id": "Q024-F1"
+        },
+        {
+          "text": "It entrusts the implementation to the AI Office.",
+          "anchors_any": [
+            "entrust the implementation of these tasks to the AI Office"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art88-p1"
+          ],
+          "id": "Q024-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q025",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "What right do downstream providers have under Article 89?",
+      "answer_type": "explanation",
+      "reference_answer": "The right to lodge a complaint alleging an infringement of the Regulation.",
+      "required_facts": [
+        {
+          "text": "Downstream providers have the right to lodge a complaint alleging an infringement.",
+          "anchors_any": [
+            "Downstream providers shall have the right to lodge a complaint alleging an infringement of this Regulation"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art89-p2"
+          ],
+          "id": "Q025-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q026",
+      "split": "dev",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "How are administrative fines set for SMEs, including start-ups, under Article 99?",
+      "answer_type": "explanation",
+      "reference_answer": "Each fine is up to the percentages or amount in paragraphs 3, 4 and 5, whichever is lower.",
+      "required_facts": [
+        {
+          "text": "The rule applies to SMEs, including start-ups.",
+          "anchors_any": [
+            "In the case of SMEs, including start-ups"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p6"
+          ],
+          "id": "Q026-F1"
+        },
+        {
+          "text": "The fine is whichever of the percentage or amount is lower.",
+          "anchors_any": [
+            "whichever thereof is lower"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p6"
+          ],
+          "id": "Q026-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Dev only: the 2026 omnibus extended some SME relief to small mid-caps; check whether it touches this paragraph."
+    },
+    {
+      "id": "Q027",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "How often must Member States report to the Commission about the administrative fines they have issued?",
+      "answer_type": "numeric",
+      "reference_answer": "On an annual basis.",
+      "required_facts": [
+        {
+          "text": "Member States report on an annual basis about fines issued and related litigation.",
+          "anchors_any": [
+            "on an annual basis, report to the Commission about the administrative fines they have issued"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p11"
+          ],
+          "id": "Q027-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q028",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "What insurance must notified bodies take out for their conformity assessment activities?",
+      "answer_type": "explanation",
+      "reference_answer": "Appropriate liability insurance, unless liability is assumed by the Member State under national law or the Member State is directly responsible.",
+      "required_facts": [
+        {
+          "text": "They must take out appropriate liability insurance.",
+          "anchors_any": [
+            "shall take out appropriate liability insurance for their conformity assessment activities"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art31-p9"
+          ],
+          "id": "Q028-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q029",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Under Article 91, may lawyers supply information on behalf of their clients, and who remains responsible if the information is incomplete, incorrect or misleading?",
+      "answer_type": "explanation",
+      "reference_answer": "Duly authorised lawyers may supply information, but the clients remain fully responsible.",
+      "required_facts": [
+        {
+          "text": "Duly authorised lawyers may supply information on behalf of their clients.",
+          "anchors_any": [
+            "Lawyers duly authorised to act may supply information on behalf of their clients"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art91-p3"
+          ],
+          "id": "Q029-F1"
+        },
+        {
+          "text": "The clients remain fully responsible for incomplete, incorrect or misleading information.",
+          "anchors_any": [
+            "remain fully responsible if the information supplied is incomplete, incorrect or misleading"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art91-p3"
+          ],
+          "id": "Q029-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q030",
+      "split": "dev",
+      "category": "single_passage",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "To which use of a high-risk AI system does the fundamental rights impact assessment obligation of Article 27 apply?",
+      "answer_type": "explanation",
+      "reference_answer": "To the first use of the high-risk AI system.",
+      "required_facts": [
+        {
+          "text": "The obligation applies to the first use.",
+          "anchors_any": [
+            "applies to the first use of the high-risk AI system"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art27-p2"
+          ],
+          "id": "Q030-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q031",
+      "split": "dev",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "What must a provider do if it considers that an Annex III AI system is not high-risk?",
+      "answer_type": "explanation",
+      "reference_answer": "Document its assessment before the system is placed on the market or put into service, be subject to the registration obligation in Article 49(2), and provide the documentation on request of national competent authorities.",
+      "required_facts": [
+        {
+          "text": "Document its assessment before placing on the market or putting into service.",
+          "anchors_any": [
+            "shall document its assessment before that system is placed on the market or put into service"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p4"
+          ],
+          "id": "Q031-F1"
+        },
+        {
+          "text": "Be subject to the registration obligation in Article 49(2).",
+          "anchors_any": [
+            "registration obligation set out in Article 49(2)"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p4"
+          ],
+          "id": "Q031-F2"
+        },
+        {
+          "text": "Provide the documentation to authorities on request.",
+          "anchors_any": [
+            "the provider shall provide the documentation of the assessment"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p4"
+          ],
+          "id": "Q031-F3"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Dev only: the omnibus proposal touched the Article 49(2) registration obligation."
+    },
+    {
+      "id": "Q032",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Which two conditions must both be fulfilled for an AI system to be considered high-risk under Article 6(1)?",
+      "answer_type": "list",
+      "reference_answer": "It is a safety component of a product (or itself a product) covered by Annex I legislation, and that product requires a third-party conformity assessment.",
+      "required_facts": [
+        {
+          "text": "The AI system is a safety component of a product, or itself a product, covered by Annex I legislation.",
+          "anchors_any": [
+            "safety component of a product"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p1"
+          ],
+          "id": "Q032-F1"
+        },
+        {
+          "text": "The product must undergo a third-party conformity assessment.",
+          "anchors_any": [
+            "third-party conformity assessment"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p1"
+          ],
+          "id": "Q032-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q033",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "What system must providers establish and document under Article 72 for high-risk AI systems?",
+      "answer_type": "explanation",
+      "reference_answer": "A post-market monitoring system proportionate to the nature of the AI technologies and the risks.",
+      "required_facts": [
+        {
+          "text": "A post-market monitoring system, proportionate to the technologies and risks.",
+          "anchors_any": [
+            "shall establish and document a post-market monitoring system"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art72-p1"
+          ],
+          "id": "Q033-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q034",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "What presumption applies to high-risk AI systems that conform to the common specifications referred to in Article 41?",
+      "answer_type": "explanation",
+      "reference_answer": "They are presumed to be in conformity with the requirements in Section 2, to the extent the specifications cover them.",
+      "required_facts": [
+        {
+          "text": "They are presumed to be in conformity with the requirements set out in Section 2.",
+          "anchors_any": [
+            "shall be presumed to be in conformity with the requirements set out in Section 2"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art41-p3"
+          ],
+          "id": "Q034-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q035",
+      "split": "dev",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Which authority is the market surveillance authority for high-risk AI systems related to products covered by Section A of Annex I, and may Member States designate another?",
+      "answer_type": "explanation",
+      "reference_answer": "The authority responsible for market surveillance under those legal acts; Member States may designate another relevant authority in appropriate circumstances, ensuring coordination.",
+      "required_facts": [
+        {
+          "text": "It is the authority responsible for market surveillance designated under those legal acts.",
+          "anchors_any": [
+            "shall be the authority responsible for market surveillance activities designated under those legal acts"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art74-p3"
+          ],
+          "id": "Q035-F1"
+        },
+        {
+          "text": "Member States may designate another relevant authority.",
+          "anchors_any": [
+            "Member States may designate another relevant authority"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art74-p3"
+          ],
+          "id": "Q035-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q036",
+      "split": "dev",
+      "category": "multi_passage",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Under which conditions can an Annex III AI system be considered not high-risk, and what must the provider do if it reaches that conclusion?",
+      "answer_type": "explanation",
+      "reference_answer": "When it only performs a narrow procedural task, improves a prior human activity, detects patterns without replacing human review, or performs a preparatory task (and does not profile persons); the provider must document its assessment before placing it on the market and is subject to registration under Article 49(2).",
+      "required_facts": [
+        {
+          "text": "Conditions: narrow procedural task or improving a previously completed human activity.",
+          "anchors_any": [
+            "intended to perform a narrow procedural task",
+            "improve the result of a previously completed human activity"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p3"
+          ],
+          "id": "Q036-F1"
+        },
+        {
+          "text": "Profiling of natural persons always makes the system high-risk.",
+          "anchors_any": [
+            "shall always be considered to be high-risk where the AI system performs profiling of natural persons"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p3"
+          ],
+          "id": "Q036-F2"
+        },
+        {
+          "text": "The provider must document its assessment before the system is placed on the market.",
+          "anchors_any": [
+            "shall document its assessment before that system is placed on the market or put into service"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p4"
+          ],
+          "id": "Q036-F3"
+        },
+        {
+          "text": "The provider is subject to the registration obligation in Article 49(2).",
+          "anchors_any": [
+            "registration obligation set out in Article 49(2)"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p4"
+          ],
+          "id": "Q036-F4"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q037",
+      "split": "test",
+      "category": "multi_passage",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Which obligations apply to a distributor that puts its own name on a high-risk AI system already on the market?",
+      "answer_type": "explanation",
+      "reference_answer": "It is considered a provider under Article 25(1) and is subject to the provider obligations of Article 16.",
+      "required_facts": [
+        {
+          "text": "It puts its name or trademark on a high-risk AI system already on the market.",
+          "anchors_any": [
+            "put their name or trademark on a high-risk AI system"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art25-p1"
+          ],
+          "id": "Q037-F1"
+        },
+        {
+          "text": "It is then considered a provider of a high-risk AI system.",
+          "anchors_any": [
+            "shall be considered to be a provider of a high-risk AI system"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art25-p1"
+          ],
+          "id": "Q037-F2"
+        },
+        {
+          "text": "It is subject to the obligations of the provider under Article 16.",
+          "anchors_any": [
+            "obligations of the provider under Article 16"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art25-p1"
+          ],
+          "id": "Q037-F3"
+        },
+        {
+          "text": "Article 16 lists the obligations of providers of high-risk AI systems.",
+          "anchors_any": [
+            "Providers of high-risk AI systems shall:"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art16-p1"
+          ],
+          "id": "Q037-F4"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q038",
+      "split": "test",
+      "category": "multi_passage",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "What conditions must be met before real-time remote biometric identification is used in publicly accessible spaces for law enforcement under Article 5?",
+      "answer_type": "list",
+      "reference_answer": "Prior authorisation by a judicial or independent administrative authority with binding decision; a fundamental rights impact assessment (Article 27) and registration in the EU database (Article 49), with an urgency exception; use only to confirm the identity of the specifically targeted individual; notification to the market surveillance and data protection authorities.",
+      "required_facts": [
+        {
+          "text": "Each use requires prior authorisation by a judicial authority or an independent administrative authority whose decision is binding.",
+          "anchors_any": [
+            "prior authorisation granted by a judicial authority or an independent administrative authority whose decision is binding"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p3"
+          ],
+          "id": "Q038-F1"
+        },
+        {
+          "text": "The authority must have completed a fundamental rights impact assessment under Article 27.",
+          "anchors_any": [
+            "completed a fundamental rights impact assessment as provided for in Article 27"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p2"
+          ],
+          "id": "Q038-F2"
+        },
+        {
+          "text": "The system must be registered in the EU database under Article 49.",
+          "anchors_any": [
+            "registered the system in the EU database according to Article 49"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p2"
+          ],
+          "id": "Q038-F3"
+        },
+        {
+          "text": "Use only to confirm the identity of the specifically targeted individual.",
+          "anchors_any": [
+            "only to confirm the identity of the specifically targeted individual"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p2"
+          ],
+          "id": "Q038-F4"
+        },
+        {
+          "text": "Each use must be notified to the market surveillance authority and the national data protection authority.",
+          "anchors_any": [
+            "notified to the relevant market surveillance authority and the national data protection authority"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p4"
+          ],
+          "id": "Q038-F5"
+        },
+        {
+          "text": "In duly justified cases of urgency, use may start before registration, which must then be completed without undue delay.",
+          "anchors_any": [
+            "in duly justified cases of urgency"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p2"
+          ],
+          "id": "Q038-F6"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": "Six facts across paragraphs 2 to 4 (several chunks)."
+    },
+    {
+      "id": "Q039",
+      "split": "dev",
+      "category": "multi_passage",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "For which objectives may real-time remote biometric identification be used in publicly accessible spaces for law enforcement under Article 5(1)(h)?",
+      "answer_type": "list",
+      "reference_answer": "The targeted search for specific victims of abduction, trafficking or sexual exploitation and for missing persons; the prevention of a specific, substantial and imminent threat to life or physical safety or a terrorist attack; the localisation or identification of suspects of serious offences punishable by custodial sentence of at least four years.",
+      "required_facts": [
+        {
+          "text": "The targeted search for specific victims of abduction, trafficking and sexual exploitation, and missing persons.",
+          "anchors_any": [
+            "targeted search for specific victims of abduction"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q039-F1"
+        },
+        {
+          "text": "The prevention of a specific, substantial and imminent threat to life or physical safety, or a terrorist attack.",
+          "anchors_any": [
+            "imminent threat to the life or physical safety"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q039-F2"
+        },
+        {
+          "text": "Suspects of offences punishable by a custodial sentence or detention order of at least four years.",
+          "anchors_any": [
+            "custodial sentence or a detention order for a maximum period of at least four years"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q039-F3"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": "Dev only: version-sensitive (Article 5)."
+    },
+    {
+      "id": "Q040",
+      "split": "dev",
+      "category": "multi_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Which body supervises compliance of an AI system built on a general-purpose AI model when the model and the system come from the same provider, and what is that body?",
+      "answer_type": "explanation",
+      "reference_answer": "The AI Office, which is the Commission's function (references to it are references to the Commission).",
+      "required_facts": [
+        {
+          "text": "The AI Office monitors and supervises compliance of that AI system.",
+          "anchors_any": [
+            "the AI Office shall have powers to monitor and supervise compliance of that AI system"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art75-p1"
+          ],
+          "id": "Q040-F1"
+        },
+        {
+          "text": "This applies when the model and the system are developed by the same provider.",
+          "anchors_any": [
+            "the model and the system are developed by the same provider"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art75-p1"
+          ],
+          "id": "Q040-F2"
+        },
+        {
+          "text": "References to the AI Office are construed as references to the Commission.",
+          "anchors_any": [
+            "references in this Regulation to the AI Office shall be construed as references to the Commission"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art3-p47"
+          ],
+          "id": "Q040-F3"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q041",
+      "split": "dev",
+      "category": "multi_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "For high-risk AI systems related to products covered by Section B of Annex I, which provisions of the Regulation apply, and how does Article 57 apply?",
+      "answer_type": "explanation",
+      "reference_answer": "Only Article 6(1), Articles 102 to 109 and Article 112 apply; Article 57 applies only in so far as the requirements have been integrated in that Union harmonisation legislation.",
+      "required_facts": [
+        {
+          "text": "Only Article 6(1), Articles 102 to 109 and Article 112 apply.",
+          "anchors_any": [
+            "only Article 6(1), Articles 102 to 109 and Article 112 apply"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art2-p2"
+          ],
+          "id": "Q041-F1"
+        },
+        {
+          "text": "Article 57 applies only in so far as the requirements have been integrated in that legislation.",
+          "anchors_any": [
+            "Article 57 applies only in so far as the requirements for high-risk AI systems under this Regulation have been integrated"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art2-p2"
+          ],
+          "id": "Q041-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q042",
+      "split": "test",
+      "category": "multi_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "From which notification does the Commission's decision period under Article 81 start?",
+      "answer_type": "explanation",
+      "reference_answer": "From the notification referred to in Article 79(5).",
+      "required_facts": [
+        {
+          "text": "The period starts from the notification referred to in Article 79(5).",
+          "anchors_any": [
+            "starting from the notification referred to in Article 79(5)"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art81-p1"
+          ],
+          "id": "Q042-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q043",
+      "split": "test",
+      "category": "multi_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Which authority may impose administrative fines on Union institutions, bodies, offices and agencies, and what is the maximum fine for non-compliance with the Article 5 prohibitions?",
+      "answer_type": "explanation",
+      "reference_answer": "The European Data Protection Supervisor; up to EUR 1 500 000 for Article 5 prohibitions.",
+      "required_facts": [
+        {
+          "text": "The European Data Protection Supervisor may impose administrative fines on Union institutions.",
+          "anchors_any": [
+            "The European Data Protection Supervisor may impose administrative fines"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art100-p1"
+          ],
+          "id": "Q043-F1"
+        },
+        {
+          "text": "For Article 5 prohibitions, up to EUR 1 500 000.",
+          "anchors_any": [
+            "administrative fines of up to EUR 1 500 000"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art100-p2"
+          ],
+          "id": "Q043-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q044",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Of which provision in another Union regulation is point (h) of Article 5(1) said to be without prejudice, and for what purposes?",
+      "answer_type": "explanation",
+      "reference_answer": "Article 9 of Regulation (EU) 2016/679, for the processing of biometric data for purposes other than law enforcement.",
+      "required_facts": [
+        {
+          "text": "It is without prejudice to Article 9 of Regulation (EU) 2016/679.",
+          "anchors_any": [
+            "without prejudice to Article 9 of Regulation (EU) 2016/679"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q044-F1"
+        },
+        {
+          "text": "This concerns the processing of biometric data for purposes other than law enforcement.",
+          "anchors_any": [
+            "processing of biometric data for purposes other than law enforcement"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art5-p1"
+          ],
+          "id": "Q044-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "A cross-reference to GDPR Article 9; a true cross-document question needs the GDPR text as a second corpus."
+    },
+    {
+      "id": "Q045",
+      "split": "dev",
+      "category": "trap_similar",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "What is the maximum administrative fine on a Union institution, body, office or agency for non-compliance with the Article 5 prohibitions?",
+      "answer_type": "numeric",
+      "reference_answer": "Up to EUR 1 500 000 (Article 100), not the EUR 35 000 000 that applies under Article 99.",
+      "required_facts": [
+        {
+          "text": "The maximum is EUR 1 500 000.",
+          "anchors_any": [
+            "administrative fines of up to EUR 1 500 000"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art100-p2"
+          ],
+          "id": "Q045-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Pair with Q003: BM25 and hybrid ranked this article first."
+    },
+    {
+      "id": "Q046",
+      "split": "test",
+      "category": "trap_similar",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Which articles set out the obligations of authorised representatives, importers, distributors and deployers?",
+      "answer_type": "list",
+      "reference_answer": "Article 22 (authorised representatives), Article 23 (importers), Article 24 (distributors), Article 26 (deployers).",
+      "required_facts": [
+        {
+          "text": "Authorised representatives: Article 22.",
+          "anchors_any": [
+            "obligations of authorised representatives pursuant to Article 22"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p4"
+          ],
+          "id": "Q046-F1"
+        },
+        {
+          "text": "Importers: Article 23.",
+          "anchors_any": [
+            "obligations of importers pursuant to Article 23"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p4"
+          ],
+          "id": "Q046-F2"
+        },
+        {
+          "text": "Distributors: Article 24.",
+          "anchors_any": [
+            "obligations of distributors pursuant to Article 24"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p4"
+          ],
+          "id": "Q046-F3"
+        },
+        {
+          "text": "Deployers: Article 26.",
+          "anchors_any": [
+            "obligations of deployers pursuant to Article 26"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art99-p4"
+          ],
+          "id": "Q046-F4"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Answerable through the penalty article; the articles themselves are also valid sources."
+    },
+    {
+      "id": "Q047",
+      "split": "test",
+      "category": "trap_similar",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Which annexes does Article 6 refer to for classifying an AI system as high-risk?",
+      "answer_type": "list",
+      "reference_answer": "Annex I (Union harmonisation legislation, Article 6(1)) and Annex III (use cases, Article 6(2) and (3)).",
+      "required_facts": [
+        {
+          "text": "Annex I lists the Union harmonisation legislation relevant to Article 6(1).",
+          "anchors_any": [
+            "Union harmonisation legislation listed in Annex I"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p1"
+          ],
+          "id": "Q047-F1"
+        },
+        {
+          "text": "Annex III lists the use cases referred to in Article 6.",
+          "anchors_any": [
+            "use cases listed in Annex III"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p3"
+          ],
+          "id": "Q047-F2"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q048",
+      "split": "dev",
+      "category": "trap_similar",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Can an Annex III AI system that performs profiling of natural persons be considered not high-risk under Article 6(3)?",
+      "answer_type": "explanation",
+      "reference_answer": "No: an Annex III AI system that performs profiling of natural persons is always considered high-risk.",
+      "required_facts": [
+        {
+          "text": "An Annex III AI system that performs profiling is always considered high-risk.",
+          "anchors_any": [
+            "shall always be considered to be high-risk where the AI system performs profiling of natural persons"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p3"
+          ],
+          "id": "Q048-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Dev only: version-sensitive (Article 6)."
+    },
+    {
+      "id": "Q049",
+      "split": "dev",
+      "category": "recital_vs_article",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "What is the purpose of the Regulation according to Article 1(1)?",
+      "answer_type": "explanation",
+      "reference_answer": "To improve the functioning of the internal market and promote the uptake of human-centric and trustworthy AI, while ensuring a high level of protection of health, safety and fundamental rights.",
+      "required_facts": [
+        {
+          "text": "Promotes the uptake of human-centric and trustworthy artificial intelligence.",
+          "anchors_any": [
+            "uptake of human-centric and trustworthy artificial intelligence"
+          ],
+          "anchors_verified": false,
+          "gold_paragraph_ids": [
+            "AIA-Art1-p1"
+          ],
+          "id": "Q049-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "medium",
+      "status": "draft",
+      "notes": "Check whether your corpus has the recitals: a recital repeats this purpose and may outrank the article."
+    },
+    {
+      "id": "Q050",
+      "split": "test",
+      "category": "trap_similar",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "Under which article may the Commission adopt delegated acts to amend the conditions in Article 6(3), second subparagraph?",
+      "answer_type": "identifier",
+      "reference_answer": "In accordance with Article 97.",
+      "required_facts": [
+        {
+          "text": "The Commission may adopt delegated acts in accordance with Article 97 to amend paragraph 3.",
+          "anchors_any": [
+            "delegated acts in accordance with Article 97 in order to amend paragraph 3"
+          ],
+          "anchors_verified": true,
+          "gold_paragraph_ids": [
+            "AIA-Art6-p6"
+          ],
+          "id": "Q050-F1"
+        }
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": ""
+    },
+    {
+      "id": "Q051",
+      "split": "test",
+      "category": "unanswerable",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "Which United States federal agency is responsible for enforcing the AI Act in the United States?",
+      "answer_type": "abstention",
+      "reference_answer": "The text does not say; it is an EU regulation and does not designate US agencies.",
+      "required_facts": [],
+      "expected_abstention": true,
+      "abstention_type": "out_of_scope",
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "",
+      "absence_terms": [
+        "United States",
+        "Federal Trade Commission"
+      ]
+    },
+    {
+      "id": "Q052",
+      "split": "dev",
+      "category": "unanswerable",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "What is the maximum duration of a fundamental rights impact assessment under Article 27?",
+      "answer_type": "abstention",
+      "reference_answer": "The text sets no maximum duration; it only says the obligation applies to the first use of the system.",
+      "required_facts": [],
+      "expected_abstention": true,
+      "abstention_type": "near_miss",
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Near miss about Article 27. Check by reading the whole article.",
+      "absence_terms": [
+        "maximum duration"
+      ]
+    },
+    {
+      "id": "Q053",
+      "split": "test",
+      "category": "unanswerable",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Which cryptographic algorithm must providers use to protect high-risk AI systems against attacks under Article 15?",
+      "answer_type": "abstention",
+      "reference_answer": "The text names no cryptographic algorithm.",
+      "required_facts": [],
+      "expected_abstention": true,
+      "abstention_type": "near_miss",
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "Near miss: Article 15 deals with cybersecurity without naming algorithms (verify).",
+      "absence_terms": [
+        "cryptograph",
+        "AES",
+        "RSA"
+      ]
+    },
+    {
+      "id": "Q054",
+      "split": "test",
+      "category": "unanswerable",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "How many days does a provider have to appeal an administrative fine imposed under Article 99?",
+      "answer_type": "abstention",
+      "reference_answer": "The text sets no appeal period for fines; it only requires procedural safeguards, including effective judicial remedies.",
+      "required_facts": [],
+      "expected_abstention": true,
+      "abstention_type": "near_miss",
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "'appeal' appears elsewhere (notified bodies): judge hits manually.",
+      "absence_terms": [
+        "appeal"
+      ]
+    },
+    {
+      "id": "Q055",
+      "split": "dev",
+      "category": "unanswerable",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "Which Chinese regulation does the AI Act cite on generative AI?",
+      "answer_type": "abstention",
+      "reference_answer": "The text cites no Chinese regulation.",
+      "required_facts": [],
+      "expected_abstention": true,
+      "abstention_type": "out_of_scope",
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft",
+      "notes": "",
+      "absence_terms": [
+        "China",
+        "Chinese"
+      ]
+    }
+  ]
+}

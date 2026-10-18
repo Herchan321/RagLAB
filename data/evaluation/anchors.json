@@ -1,0 +1,19 @@
+{
+  "Q001-F1": ["subliminal techniques", "materially distorting the behaviour"],
+  "Q001-F2": ["exploit the vulnerabilities", "age, disability"],
+  "Q001-F3": ["social scoring", "detrimental treatment"],
+  "Q001-F4": ["predict the occurrence of criminal offences", "profiling"],
+  "Q001-F5": ["facial recognition databases", "untargeted scraping"],
+  "Q001-F6": ["infer emotions", "workplace and education institutions"],
+  "Q001-F7": ["biometric categorisation systems", "sensitive attributes"],
+  "Q001-F8": ["real-time remote biometric identification", "publicly accessible spaces"],
+  "Q002-F1": ["prohibited outright", "placed on the market"],
+  "Q002-F2": ["high-risk AI systems", "Article 6"],
+  "Q003-F1": ["EUR 35 000 000", "35 000 000"],
+  "Q003-F2": ["7 %", "total worldwide annual turnover"],
+  "Q004-F1": ["Article 16", "obligations of providers"],
+  "Q005-F1": ["systemic risk", "high-impact capabilities"],
+  "Q005-F2": ["10 25", "floating-point operations"],
+  "Q006-F1": [],
+  "Q007-F1": []
+}

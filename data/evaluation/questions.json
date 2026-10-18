@@ -1,0 +1,174 @@
+{
+  "schema_version": "2.0",
+  "dataset_id": "eu-ai-act-qa-v2",
+  "description": "Factual questions about the text of the EU AI Act, used to compare RAG architectures. Not legal advice: systems are evaluated, not the law.",
+  "corpus": {
+    "documents": [
+      {
+        "doc_id": "AIA",
+        "title": "Regulation (EU) 2024/1689 (AI Act), original Official Journal text",
+        "language": "en",
+        "oj_publication_date": "2024-07-12",
+        "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+        "local_path": "data/raw/regAI.html",
+        "retrieved_at": "2026-10-14",
+        "sha256": "efe95c40fbab93c10c734c0640edffb63d27e3b5fca191898a65050f648770dc",
+        "passages_file": "data/processed/aia_passages.jsonl"
+      }
+    ],
+    "version_note": "Original 2024 text, before the Digital Omnibus on AI (Regulation (EU) 2026/1744, in force 27 July 2026)."
+  },
+  "annotation_rules": [
+    "An answerable question must be answerable from the frozen corpus alone.",
+    "Each required fact is one atomic, checkable claim, copied or closely paraphrased from a gold passage.",
+    "gold_passage_ids live only inside required_facts; retrieval gold is derived from them.",
+    "An unanswerable question must look like a real question and must not mention passages, context or fiction.",
+    "Do not edit a test question after the freeze."
+  ],
+  "freeze": {
+    "frozen_at": "2026-10-14",
+    "n_test": 2,
+    "test_sha256": null
+  },
+  "questions": [
+    {
+      "id": "Q001",
+      "slug": "art5-prohibited-categories",
+      "split": "dev",
+      "category": "list_enumeration",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "According to Article 5(1) of the AI Act, which categories of AI practices are prohibited?",
+      "answer_type": "list",
+      "reference_answer": null,
+      "required_facts": [
+        {"id": "Q001-F1", "text": "Prohibits AI systems that deploy subliminal, manipulative or deceptive techniques that materially distort behaviour and cause or are likely to cause significant harm.", "gold_passage_ids": ["AIA-Art5-p1"]},
+        {"id": "Q001-F2", "text": "Prohibits AI systems that exploit vulnerabilities due to age, disability or a specific social or economic situation.", "gold_passage_ids": ["AIA-Art5-p1"]},
+        {"id": "Q001-F3", "text": "Prohibits social scoring: evaluating or classifying persons over time based on social behaviour or personal characteristics, leading to detrimental treatment.", "gold_passage_ids": ["AIA-Art5-p1"]},
+        {"id": "Q001-F4", "text": "Prohibits risk assessments that predict criminal offences solely from profiling or personality traits.", "gold_passage_ids": ["AIA-Art5-p1"]},
+        {"id": "Q001-F5", "text": "Prohibits building or expanding facial recognition databases through untargeted scraping of facial images from the internet or CCTV footage.", "gold_passage_ids": ["AIA-Art5-p1"]},
+        {"id": "Q001-F6", "text": "Prohibits inferring emotions in the workplace and in education institutions, except for medical or safety reasons.", "gold_passage_ids": ["AIA-Art5-p1"]},
+        {"id": "Q001-F7", "text": "Prohibits biometric categorisation systems that infer sensitive attributes such as race, political opinions, trade union membership, religious beliefs or sexual orientation.", "gold_passage_ids": ["AIA-Art5-p1"]},
+        {"id": "Q001-F8", "text": "Prohibits real-time remote biometric identification in publicly accessible spaces for law enforcement, subject to exceptions.", "gold_passage_ids": ["AIA-Art5-p1"]}
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "high",
+      "status": "draft"
+    },
+    {
+      "id": "Q002",
+      "slug": "prohibited-vs-high-risk",
+      "split": "dev",
+      "category": "trap_similar",
+      "difficulty": "medium",
+      "language": "en",
+      "question": "What is the difference between an AI practice prohibited under Article 5 and an AI system classified as high-risk under Article 6?",
+      "answer_type": "explanation",
+      "reference_answer": null,
+      "required_facts": [
+        {"id": "Q002-F1", "text": "Article 5 lists AI practices that are prohibited outright (they may not be placed on the market, put into service or used).", "gold_passage_ids": ["AIA-Art5-p1"]},
+        {"id": "Q002-F2", "text": "Article 6 sets the rules for classifying AI systems as high-risk, which are allowed subject to requirements.", "gold_passage_ids": ["AIA-Art6-p1", "AIA-Art6-p2"]}
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": true,
+      "contamination_risk": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "Q003",
+      "slug": "art5-fine-amount",
+      "split": "dev",
+      "category": "numeric_threshold",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "What is the maximum administrative fine for non-compliance with the prohibition of AI practices referred to in Article 5?",
+      "answer_type": "numeric",
+      "reference_answer": null,
+      "required_facts": [
+        {"id": "Q003-F1", "text": "The fine can reach EUR 35 000 000.", "gold_passage_ids": ["AIA-Art99-p3"], "auto_check": ["35[ ,.\\u00a0]?000[ ,.\\u00a0]?000"]},
+        {"id": "Q003-F2", "text": "If the offender is an undertaking, the fine can reach 7 % of total worldwide annual turnover of the preceding financial year, whichever is higher.", "gold_passage_ids": ["AIA-Art99-p3"], "auto_check": ["7\\s?%"]}
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "high",
+      "status": "draft"
+    },
+    {
+      "id": "Q004",
+      "slug": "high-risk-provider-obligations-article",
+      "split": "dev",
+      "category": "single_passage",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "Which article of the AI Act sets out the obligations of providers of high-risk AI systems?",
+      "answer_type": "identifier",
+      "reference_answer": "Article 16.",
+      "required_facts": [
+        {"id": "Q004-F1", "text": "Article 16 sets out the obligations of providers of high-risk AI systems.", "gold_passage_ids": ["AIA-Art16-p1"], "auto_check": ["Article\\s*16"]}
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "Q005",
+      "slug": "gpai-systemic-risk-classification",
+      "split": "test",
+      "category": "single_passage",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Under Article 51, when is a general-purpose AI model classified as having systemic risk, and what compute threshold creates a presumption of high-impact capabilities?",
+      "answer_type": "explanation",
+      "reference_answer": null,
+      "required_facts": [
+        {"id": "Q005-F1", "text": "A general-purpose AI model is classified as having systemic risk if it has high-impact capabilities evaluated with appropriate technical tools and methodologies, including indicators and benchmarks.", "gold_passage_ids": ["AIA-Art51-p1"]},
+        {"id": "Q005-F2", "text": "High-impact capabilities are presumed when the cumulative compute used for training, measured in floating-point operations, is greater than 10^25.", "gold_passage_ids": ["AIA-Art51-p2"], "auto_check": ["10\\^?\\s?25|10\\u00b2\\u2075"]}
+      ],
+      "expected_abstention": false,
+      "abstention_type": null,
+      "version_sensitive": false,
+      "contamination_risk": "medium",
+      "status": "draft"
+    },
+    {
+      "id": "Q006",
+      "slug": "moroccan-authority-out-of-scope",
+      "split": "dev",
+      "category": "unanswerable",
+      "difficulty": "easy",
+      "language": "en",
+      "question": "Which Moroccan authority is responsible for enforcing the AI Act in Morocco?",
+      "answer_type": "abstention",
+      "reference_answer": "The text does not say; it is an EU regulation and does not designate Moroccan authorities.",
+      "required_facts": [],
+      "expected_abstention": true,
+      "abstention_type": "out_of_scope",
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft"
+    },
+    {
+      "id": "Q007",
+      "slug": "near-miss-unanswerable",
+      "split": "test",
+      "category": "unanswerable",
+      "difficulty": "hard",
+      "language": "en",
+      "question": "Which exact deadline does Article 16 impose for providers to appoint a quality manager?",
+      "answer_type": "abstention",
+      "reference_answer": "The text does not specify such a deadline.",
+      "required_facts": [],
+      "expected_abstention": true,
+      "abstention_type": "near_miss",
+      "version_sensitive": false,
+      "contamination_risk": "low",
+      "status": "draft"
+    }
+  ]
+}
